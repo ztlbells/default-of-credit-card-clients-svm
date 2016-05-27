@@ -32,7 +32,7 @@ public class jmain {
     	
         Sheet sheet;
     	Workbook book;
-    	final int numInstance =10;
+    	final int numInstance =24000;
     	final int attr=23;
     	
     	//TODO normalization
@@ -104,15 +104,41 @@ public class jmain {
 	   
 	   Sheet sheet;
    		Workbook book;
-   		final int numInstance =100;
+   		final int testInstance =5000;
    		final int attr=23;
-   		svm_node [] test = new svm_node[attr];
+   		
+   		svm_node [][] test = new svm_node[testInstance][attr];
+   		double [] result =new double[testInstance];
+   		double [] prediction =new double[testInstance];
    		
        try{
        	book= Workbook.getWorkbook(new File("D:/default of credit card clients.xls"));
        	sheet=book.getSheet(0); 
-       	int j=1;
-       	while(j <= attr){
+       	
+       	int i=24500;
+       	while(i < 29500 ){  
+    		int j=1;
+    		while(j <= attr){
+    			//total dataset:dataSet, which saves all of the cell(map:cell->svm_node)    
+    			System.out.println("i="+i+" j="+j);
+    			test[i-24500][j-1]=new svm_node();
+    			
+    			test[i-24500][j-1].index=j-1;
+    			test[i-24500][j-1].value=Double.parseDouble(sheet.getCell(j,i).getContents());
+    			   			
+    			System.out.println("index="+test[i-24500][j-1].index);    			   			
+    			System.out.println("value="+test[i-24500][j-1].value);
+    			
+    			j++;    		
+        		}
+    		result[i-24500]=Double.parseDouble(sheet.getCell(24,i).getContents());
+    		System.out.println("result="+result[i-24500]);
+    		i++;
+    		}
+       }catch(Exception e)  { } 
+       	/**
+       	 * int j=1;
+       	 * 	while(j <= attr){
    			
    			System.out.println("i="+24005+" j="+j);
    			test[j-1]=new svm_node();
@@ -124,19 +150,38 @@ public class jmain {
    			
    			j++;   		
        	}
-       	}
-       catch(Exception e)  { } 
+       	}*/
+       
+       	 
+       
        
        svm_model model;
        String modelFile="D:/svm_model.txt";
+       int correct=0;
        try {
        model = svm.svm_load_model(modelFile);	//load model
-       //testing
-       System.out.println(svm.svm_predict(model, test));
+       //testing, getting prediction result
+       int k=0;
+       while(k < testInstance){
+    	   prediction[k]=svm.svm_predict(model, test[k]);
+    	   System.out.println("prediction="+prediction[k]+" and result="+result[k]);
+    	   if(prediction[k]==result[k]){
+    		   correct++;
+    		   System.out.println("k ="+k+" correct="+correct);
+    	   }
+    		  
+    	   k++;
+       }
        } 
        catch (Exception e) {e.printStackTrace();}
-   }
+       
+       double xx=correct;
+       double yy=testInstance;
+       //calculating hit rate
+       System.out.println("hit rate="+xx/yy);
+   
     
 }
+   }
 
 
