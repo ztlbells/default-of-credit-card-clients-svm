@@ -9,7 +9,8 @@ import java.io.File;
 
 import jxl.*;
 
-import java.util.*;
+
+import creditCard.DataSet;
 //import creditCard.jInstance;
 
 public class jmain {
@@ -17,14 +18,17 @@ public class jmain {
      * @param args
      */
     public static void main(String[] args) {
+      
+    	//training();
+    	//testing();
+    	//DataSet(String restorePath, String savePath,int size,int attr)
+    	DataSet myDataSet=new DataSet("D:/default of credit card clients.xls",
+    			"D:/origData.txt",30000,23);
+    	myDataSet.setStart(2, 1);
+    	myDataSet.run();
     	
-    	
-    	
-        
-    	training();
-    	testing();
     }
-        
+    
     public static void training(){
     	//get data from data set. There are 30,000 instance in total. We take 80% of them as training data.
     	//i starts from 2
@@ -32,11 +36,10 @@ public class jmain {
     	
         Sheet sheet;
     	Workbook book;
-    	final int numInstance =24000;
+    	final int numInstance =13333;
     	final int attr=23;
     	
     	//TODO normalization
-    	//final int x1Bar=167484;
     	
     	svm_node data[][]=new svm_node[numInstance][attr];
     	double label[]=new double[numInstance];
@@ -46,8 +49,9 @@ public class jmain {
         param.svm_type = svm_parameter.C_SVC;
         param.kernel_type = svm_parameter.LINEAR;
         param.degree=3;
+        param.gamma=1.0/numInstance;
         param.cache_size = 100;
-        param.eps = 0.00001;
+        param.eps = 0.001;
         param.C = 1;
 
     	
