@@ -2,18 +2,13 @@
  * 
  */
 package creditCard;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import jxl.*;
-import libsvm.svm_node;
 /**
  * @author ztlbells
  *
@@ -72,14 +67,21 @@ public class DataSet {
 	    			 * [label] <index1>:[value] <index2>:[value] <index3>:[value] ..
 	    			 * [label] <index1>:[value] <index2>:[value] <index3>:[value] ..
 	    			 */
-	    			
-	    			fw.write(sheet.getCell(24,i).getContents());
+	    			double temp=Double.parseDouble(sheet.getCell(24,i).getContents());
+	    			if (temp == 0.0){
+	    				System.out.println("i="+i+",0->-1");
+	    				fw.write("-1");
+	    			}
+	    			else if(temp == 1.0){
+	    				System.out.println("i="+i+",1");
+	    				fw.write(sheet.getCell(24,i).getContents());
+	    			}
 	    			
 	    			int j=this.col;
 	    			while(j <= this.attributes){
 	    				
-	    				System.out.println("i="+i+" j="+j);
-	    				System.out.println(sheet.getCell(j,i).getContents());
+	    				//System.out.println("i="+i+" j="+j);
+	    				//System.out.println(sheet.getCell(j,i).getContents());
 	    				
 	    				fw.write(" "+j + ":" + sheet.getCell(j,i).getContents());
 	    				j++;
